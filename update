@@ -55,7 +55,7 @@ podman start $void_container
 # ---
 
 # Install deps
-podman exec -u root $void_container /usr/bin/xbps-install -Syu bash curl git util-linux
+podman exec -u root:$user_gid $void_container /usr/bin/xbps-install -Syu bash curl git util-linux
 
 # ---
 
@@ -65,5 +65,5 @@ podman exec $void_container /myvoidrepo/build
 # ---
 
 # Sign packages and repository
-podman exec -u root $void_container /myvoidrepo/sign
+podman exec -u root:$user_gid $void_container /myvoidrepo/sign
 
