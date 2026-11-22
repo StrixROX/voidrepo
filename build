@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#
+# This script is based on: https://github.com/the-maldridge/xbps-mini-builder/blob/master/xbps-mini-builder
+#
+
+set -e pipefail
+
+# Jump to the directory that owns this script
+cd "${0%/*}" || exit 1
+
+# ---
+cd void-packages || exit 2
+
+# Do we have a live build environment?
+if [ ! -d masterdir ] ; then
+    # No masterdir, go ahead and bootstrap it
+    ./xbps-src binary-bootstrap
+else
+    # Have a masterdir, keep it up to date
+    ./xbps-src bootstrap-update
+fi
+
+# ---
+
+build_mypkgs() {
+  case $1 in
+    genlimineconf)
+      # Pull latest srcpkg template
+      curl -fSsL --create-dirs --output-dir="srcpkgs/genlimineconf" -o template "https://github.com/StrixROX/genlimineconf/releases/latest/download/srcpkg_template"
+
+      # Build package from template
+      ./xbps-src pkg genlimineconf
+      ;;
+  esac
+}
+
+while read -r package; do
+  build_mypkgs $package
+done < ../packages.list
+
+# ---
+
+# Copy .xbps packages to the repository
+mkdir -p ../repository
+
+cp hostdir/binpkgs/*.xbps ../repository/
+

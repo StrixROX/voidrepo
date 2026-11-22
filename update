@@ -1,0 +1,69 @@
+#!/bin/sh
+
+#
+# This script is based on: https://github.com/the-maldridge/xbps-mini-builder/blob/master/xbps-mini-builder
+#
+
+set -e pipefail
+
+# Jump to the directory that owns this script
+cd "${0%/*}" || exit 1
+
+# --- Do we have keys to sign with? else create one
+if [ ! -f private.pem ] ; then
+    rm -rf private.pem private.pem.pub
+    ssh-keygen -t rsa -b 4096 -m PEM -N "" -f private.pem
+fi
+
+# ---
+
+# Initialise required dirs
+mkdir -p repository
+mkdir -p void-packages
+
+# ---
+
+# Do we actually have the repo yet?
+cd void-packages || exit 2
+
+if [ ! -d srcpkgs ] ; then
+    # No, clone a fresh copy
+    git clone --depth=1 https://github.com/void-linux/void-packages .
+else
+    # Yes, pull in the changes for this run
+    git reset --hard HEAD
+    git pull
+fi
+
+# ---
+
+# Setup void container
+void_container='voidbuildenv'
+user_uid="$(id -u)"
+user_gid="$(getent group podman | cut -d: -f3)"
+host_dir="~/myvoidrepo" # should contain (this script) update, build, packages.list, void-packages/, and repository/
+
+# Does the container exist?
+if ! podman container exists $void_container >/dev/null 2>&1; then
+  # No, create it
+  podman create -it --userns=keep-id:uid=$user_uid,gid=$user_gid --name=$void_container -v $host_dir:/myvoidrepo ghcr.io/void-linux/void-glibc:latest
+fi
+
+# Start container
+podman start $void_container
+
+# ---
+
+# Install deps
+podman exec -u root $void_container /usr/bin/xbps-install -Syu bash curl git util-linux
+
+# ---
+
+# Build packages in packages.list and move to repository
+podman exec $void_container /myvoidrepo/build
+
+# ---
+
+# Sign packages and repository
+podman exec -u root $void_container /myvoidrepo/sign
+

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#
+# This script is based on: https://github.com/the-maldridge/xbps-mini-builder/blob/master/xbps-mini-builder
+#
+
+set -e pipefail
+
+# Jump to the directory that owns this script
+cd "${0%/*}" || exit 1
+
+# ---
+
+# Register all packages to repo
+cd repository || exit 2
+
+xbps-rindex -a *.xbps
+
+# Add pubkey to repository metadata
+xbps-rindex --privkey ../private.pem --sign --signedby "StrixROX" .
+
+# Sign the packages
+xbps-rindex --privkey ../private.pem --sign-pkg *.xbps
+
