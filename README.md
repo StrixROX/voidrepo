@@ -51,3 +51,7 @@ build_mypkgs() {
 > Note: `build` and `sign` scripts are not meant to be run independently. If you still want to, read through it and use at your own risk.
 
 5. After `update` finishes, your signed packages and repository will be available in `myvoidrepo/repository` and you can serve it on your server.
+
+# Serve Repository
+
+Run the `serve` script to run an Apache server to serve your repository on port `8080`.
