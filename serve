@@ -1,7 +1,8 @@
 #!/bin/sh
 
 podman run \
-  --name voidrepo \
+  --name=voidrepo \
+  --dns=none \
   -p 8080:80 \
   --volume=$HOME/myvoidrepo/repository:/usr/local/apache2/htdocs:ro \
   --detach \

@@ -1,0 +1,5 @@
+[Container]
+ContainerName=voidrepo
+PublishPort=8080:80
+Volume=%h/myvoidrepo/repository:/usr/local/apache2/htdocs:ro
+DNS=none
