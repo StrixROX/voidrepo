@@ -1,0 +1,12 @@
+[Unit]
+Description=Apache server for serving myvoidrepo/repository
+
+[Container]
+Image=docker.io/library/httpd
+ContainerName=voidrepo
+PublishPort=@HOST_PORT@:80
+Volume=@HOME@/myvoidrepo/repository:/usr/local/apache2/htdocs:ro
+DNS=none
+
+[Install]
+WantedBy=default.target

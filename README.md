@@ -55,3 +55,24 @@ build_mypkgs() {
 # Serve Repository
 
 Run the `serve` script to run an Apache server to serve your repository on port `8080`.
+
+## Autostart Apache Server
+
+1. Edit the provided `voidrepo-server.container.in` and replace `@HOST_PORT@` and `@HOST@` variables with your values and save to `voidrepo-server.container`.
+
+> Replace @HOST@ with $HOST; replace @HOST_PORT@ with the port on the host you want to serve the repository on.
+
+1. Use the resulting `voidrepo-server.container` to create a [podman quadlet](https://docs.podman.io/en/latest/markdown/podman-quadlet-basic-usage.7.html).
+
+```bash
+sudo podman quadlet install voidrepo-server.container           # installs voidrepo-server.service system unit (rootful podman container)
+sudo systemctl daemon-reload                                    # reload systemd units
+```
+
+2. You can then enable the generated service to autostart the apache container on boot
+
+```bash
+sudo systemctl enable --now voidrepo-server
+```
+
+> Note: If you want to do this for a rootless container, you will have to create a [rootless podman quadlet]](https://docs.podman.io/en/latest/markdown/podman-quadlet-basic-usage.7.html#step-2-place-the-file), [enable lingering](https://wiki.archlinux.org/title/Systemd/User#Automatic_start-up_of_systemd_user_instances) for the user unit and enable the user service. Entirely too much hassle.

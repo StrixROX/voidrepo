@@ -2,3 +2,5 @@ private.pem*
 
 repository/
 void-packages/
+
+voidrepo-server.container
