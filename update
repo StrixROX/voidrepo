@@ -41,7 +41,7 @@ fi
 void_container='voidbuildenv'
 user_uid="$(id -u)"
 user_gid="$(getent group podman | cut -d: -f3)"
-host_dir="~/myvoidrepo" # should contain (this script) update, build, packages.list, void-packages/, and repository/
+host_dir="$HOME/myvoidrepo" # should contain (this script) update, build, packages.list, void-packages/, and repository/
 
 # Does the container exist?
 if ! podman container exists $void_container >/dev/null 2>&1; then
