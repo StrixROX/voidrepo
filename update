@@ -65,5 +65,5 @@ podman exec $void_container /myvoidrepo/build
 # ---
 
 # Sign packages and repository
-podman exec -u root:$user_gid $void_container /myvoidrepo/sign
+podman exec $void_container /myvoidrepo/sign
 
