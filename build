@@ -37,7 +37,7 @@ build_mypkgs() {
       ./xbps-src pkg noctalia
       ;;
     umbriel)
-      curl -fSsL --create-dirs --output-dir="srcpkgs/noctalia" -o template "https://raw.githubusercontent.com/UniversalRepository/packages/refs/heads/master/void/srcpkgs/umbriel/template"
+      curl -fSsL --create-dirs --output-dir="srcpkgs/umbriel" -o template "https://raw.githubusercontent.com/UniversalRepository/packages/refs/heads/master/void/srcpkgs/umbriel/template"
       ./xbps-src pkg umbriel
       ;;
 
