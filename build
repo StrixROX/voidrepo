@@ -32,6 +32,10 @@ build_mypkgs() {
       # Build package from template
       ./xbps-src pkg genlimineconf
       ;;
+    noctalia)
+      curl -fSsL --create-dirs --output-dir="srcpkgs/noctalia" -o template "https://raw.githubusercontent.com/UniversalRepository/packages/refs/heads/master/void/srcpkgs/noctalia/template"
+      ./xbps-src pkg noctalia
+      ;;
   esac
 }
 
